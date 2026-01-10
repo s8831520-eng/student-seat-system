@@ -235,7 +235,7 @@
             background-color: #d4b483;
             height: 60px;
             border-radius: 8px;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
             width: 70%;
             position: relative;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
@@ -254,6 +254,30 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        
+        /* 新增：座位控制按鈕區域 */
+        .seat-controls {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .seat-controls h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+        }
+        
+        .seat-controls .btn-group {
+            justify-content: center;
+        }
+        
+        .seat-controls .btn-group .btn {
+            max-width: 200px;
         }
         
         /* 座位區域 - 響應式設計 */
@@ -818,16 +842,6 @@
                 <div class="btn-group">
                     <button class="btn btn-success" id="manualAssignBtn">執行手動指定</button>
                 </div>
-                
-                <div class="form-group" style="margin-top: 20px;">
-                    <label for="randomAssignment">隨機分配:</label>
-                    <div class="input-help">點擊隨機分配座位（手動指定座位將保持不變）</div>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-success" id="randomAssign">隨機分配座位</button>
-                    <button class="btn btn-danger" id="clearAssignments">清除所有分配</button>
-                </div>
             </div>
             
             <div class="student-list">
@@ -845,6 +859,16 @@
                     <p>班級座位表系統</p>
                 </div>
                 <div class="teacher-desk"></div>
+                
+                <!-- 新增：座位控制按鈕區域（在講台下方，座位表上方） -->
+                <div class="seat-controls">
+                    <h3>隨機分配座位</h3>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 0.95rem;">點擊隨機分配座位（手動指定座位將保持不變）</p>
+                    <div class="btn-group">
+                        <button class="btn btn-success" id="randomAssign">隨機分配座位</button>
+                        <button class="btn btn-danger" id="clearAssignments">清除所有分配</button>
+                    </div>
+                </div>
             </div>
             
             <h2>🏫 教室座位表</h2>
@@ -976,6 +1000,15 @@
             classNameInput.addEventListener('input', updateClassName);
             classNameInput.addEventListener('change', updateClassName);
             
+            // 座位設定變更事件
+            document.getElementById('rows').addEventListener('change', function() {
+                rows = parseInt(this.value) || 6;
+            });
+            
+            document.getElementById('cols').addEventListener('change', function() {
+                cols = parseInt(this.value) || 6;
+            });
+            
             // 點擊模態框外部關閉
             assignmentModal.addEventListener('click', function(e) {
                 if (e.target === assignmentModal) {
@@ -1030,7 +1063,7 @@
                         col: j + 1,
                         studentId: null,
                         blocked: false,
-                        fixed: false, // 新增：是否為固定座位
+                        fixed: false,
                         element: null
                     };
                     
@@ -1092,7 +1125,7 @@
                             name: parts[1],
                             gender: parts[2],
                             seatId: null,
-                            fixed: false // 新增：是否為固定座位
+                            fixed: false
                         };
                         students.push(student);
                     } else {
